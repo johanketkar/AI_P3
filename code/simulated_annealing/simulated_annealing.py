@@ -2,6 +2,7 @@ import numpy as np
 import random
 import math
 
+
 # number of items
 N = 100
 
@@ -29,10 +30,32 @@ v = np.array([25, 27, 15, 25, 13, 15, 18, 24, 25, 30, 12, 18, 28, 30, 20, 26,
 
 
 def neighbor_bag(bag):
+
     """
     Return a "neighbor" of the current bag.
     """
     next_bag = list(bag)
+    new_item = random.randint(0, 99)
+    weight = 0 
+    for i in next_bag:
+        weight += w[i]
+
+    while(new_item in next_bag):
+        new_item = random.randint(0,99)
+
+
+    #print new_item
+    if(weight + w[new_item] < W):
+        next_bag.append(new_item)
+        return next_bag
+    else:
+        random.shuffle(next_bag)
+        for i in range(len(next_bag)):
+            curr = next_bag[i]
+            if(weight - w[curr] + w[new_item] < W):
+                next_bag[i] = new_item
+                return next_bag
+
     return next_bag  # TODO
 
 
@@ -45,7 +68,14 @@ def accept_bag(new_val, old_val, T):
     1                            -->  if new_val > old_val
     exp((new_val - old_val) / T) -->  if old_val >= new_val
     """
-    return 0  # TODO
+    if(new_val > old_val):
+        return True
+    else:
+        r = random.random()
+        if r < math.exp((new_val - old_val) / T):
+            return True
+
+    return False  # TODO
 
 
 def simulated_annealing():
